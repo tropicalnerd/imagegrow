@@ -1,0 +1,33 @@
+:root
+  --window-margin 20
+
+body
+  margin 0
+  min-height 100vh
+
+.text-block
+  display flex
+  flex-direction column
+  font-family sans-serif
+  line-height 1.5
+  margin-left var(--screen-margin);
+  margin-right var(--screen-margin);
+  
+  &__figure
+    --img-width 200px
+    --img-height 267px
+    width var(--img-width)
+    height var(--img-height)
+    margin-left auto
+    margin-right auto
+    // transition transform .2s ease
+    
+  img
+    border 2px solid black
+    box-shadow 8px 8px 0 black
+    
+    &.grow
+      position fixed
+      top var(--img-top)
+      left var(--img-left)
+  
