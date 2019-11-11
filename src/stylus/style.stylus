@@ -12,6 +12,8 @@ body
   line-height 1.5
   margin-left var(--screen-margin);
   margin-right var(--screen-margin);
+  padding 1.5rem
+
   
   &__figure
     --img-width 200px
@@ -20,14 +22,15 @@ body
     height var(--img-height)
     margin-left auto
     margin-right auto
-    // transition transform .2s ease
     
   img
     border 2px solid black
     box-shadow 8px 8px 0 black
-    
+    transition transform .2s ease
+        
     &.grow
       position fixed
       top var(--img-top)
       left var(--img-left)
+      transform translateY(var(--grow-y)) scale(var(--grow-scale)) 
   

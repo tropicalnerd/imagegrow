@@ -1,0 +1,35 @@
+:root {
+  --window-margin: 20;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+.text-block {
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  line-height: 1.5;
+  margin-left: var(--screen-margin);
+  margin-right: var(--screen-margin);
+  padding: 1.5rem;
+}
+.text-block__figure {
+  --img-width: 200px;
+  --img-height: 267px;
+  width: var(--img-width);
+  height: var(--img-height);
+  margin-left: auto;
+  margin-right: auto;
+}
+.text-block img {
+  border: 2px solid #000;
+  box-shadow: 8px 8px 0 #000;
+  transition: transform 0.2s ease;
+}
+.text-block img.grow {
+  position: fixed;
+  top: var(--img-top);
+  left: var(--img-left);
+  transform: translateY(var(--grow-y)) scale(var(--grow-scale));
+}
