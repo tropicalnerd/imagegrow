@@ -6,6 +6,10 @@ const figures = document.querySelectorAll('.text-block__figure');
 const imgs = document.querySelectorAll('.text-block__figure > img');
 const body = document.querySelector('body');
 
+// Convert duration custom property to milliseconds
+const duration = 1000 * Number(getComputedStyle(document.documentElement).getPropertyValue('--duration').slice(0, -1));
+console.log(duration);
+
 // Functions
 
 // @params img as Node
@@ -36,24 +40,41 @@ function grow(img) {
     growWidth = growHeight / imgAspect;
   }
   
-  const growY = -imgTop + (windowHeight - imgHeight) / 2;
-  const growScale = growWidth / imgWidth;
+  const growShiftY = (-imgTop + (windowHeight - imgHeight) / 2).toFixed(2);
+  const growShiftX = (-imgLeft + (windowWidth - imgWidth) / 2).toFixed(2);
+  const growScale = (growWidth / imgWidth).toFixed(2);
   
   img.style.setProperty('--img-top', imgTop + 'px');
   img.style.setProperty('--img-left', imgLeft + 'px');
+  img.style.setProperty('--grow-shift-x', growShiftX + 'px');
+  img.style.setProperty('--grow-shift-y', growShiftY + 'px');
   img.style.setProperty('--grow-scale', growScale);
-  img.style.setProperty('--grow-y', growY + 'px');
 
   img.classList.add('grow');
+}
+
+function shrink(img) {
+  const figure = img.parentNode;
+
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+
+  const figureOffset = figure.getBoundingClientRect();
+  const figureTop = figureOffset.top;
+  const figureLeft = figureOffset.left;
+  const figureWidth = figureOffset.width;
+  const figureHeight = figureOffset.height;
+  
+
 }
 
 function toggleGrow() {
   const img = this;
 
   if (this.classList.contains('grow')) {
-    
+    shrink(img);
+
     this.classList.remove('grow');
-    // document.removeEventListener('click', shrinkAll);
   } else {
     grow(img);
   }
