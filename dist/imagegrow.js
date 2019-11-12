@@ -1,9 +1,9 @@
 // Init
-console.log('Init imagegrow.js');
+console.log('Init imlarge.js');
 
 // Get elements
-const figures = document.querySelectorAll('.text-block__figure');
-const imgs = document.querySelectorAll('.text-block__figure > img');
+const figures = document.querySelectorAll('.imgro');
+// const imgs = figures.querySelectorAll('img');
 const body = document.querySelector('body');
 const closeButton =
   `<button class="close-button">
@@ -107,7 +107,8 @@ function toggleGrow() {
 }
 
 // Event Listeners
-imgs.forEach(function(img) {
+figures.forEach(function(figure) {
+  const img = figure.querySelector('img');
   img.addEventListener('click', toggleGrow);
 
   // Create close button
@@ -115,7 +116,6 @@ imgs.forEach(function(img) {
   template.innerHTML = closeButton;
 
   // Wrap image
-  const figure = img.parentNode;
   const wrapper = document.createElement('div')
   wrapper.classList.add('imgro-wrap')
   wrapper.appendChild(img);

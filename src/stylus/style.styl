@@ -17,7 +17,7 @@ body
   width 100%
   height auto
 
-.close-button
+.button
   // --close-button-width: 2rem
   // position fixed
   // bottom 7%
@@ -43,25 +43,16 @@ body
 
   
   &__figure
-    --img-width 200px
-    --img-height 267px
-    width var(--img-width)
-    height var(--img-height)
+    display inline-block
     margin-left auto
     margin-right auto
-  
-  .imgro-wrap
-    transition transform var(--duration) ease
-
-    &.grow
-      position fixed
-      top var(--img-top)
-      left var(--img-left)
-      transform translate(var(--grow-shift-x), var(--grow-shift-y)) scale(var(--grow-scale)) 
-
+    
   img
+    display block
     border 2px solid black
     box-shadow 8px 8px 0 black
+
+@import 'imlarge'
         
     
   

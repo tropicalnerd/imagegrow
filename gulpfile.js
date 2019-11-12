@@ -60,7 +60,7 @@ gulp.task('pug', function buildHTML() {
 });
 
 gulp.task('stylus', function() {
-  return gulp.src('src/stylus/style.stylus')
+  return gulp.src('src/stylus/style.styl')
   .pipe(stylus())
   .pipe(gulp.dest('dist'))
   .pipe(browsersync.stream())
@@ -78,7 +78,7 @@ gulp.task('serve', function() {
 
   gulp.watch(['src/images/*.{jpg, jpeg}'], gulp.series('images'));
   gulp.watch('src/pug/*.pug', gulp.series('pug'));
-  gulp.watch('src/stylus/*.stylus', gulp.series('stylus'));
+  gulp.watch('src/stylus/*.styl', gulp.series('stylus'));
   gulp.watch('src/js/*.js', gulp.series('js'));
 
   gulp.watch(['dist/index.html', 'dist/*.js']).on('change', browsersync.reload);

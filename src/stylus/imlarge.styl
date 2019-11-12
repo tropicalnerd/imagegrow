@@ -1,0 +1,20 @@
+.imlarge
+    // img
+    //     transition transform var(--duration) ease
+
+    // &.grow
+    //     img
+    //         position fixed
+    //         // top var(--img-top)
+    //         // left var(--img-left)
+    //         // transform translate(var(--grow-shift-x), var(--grow-shift-y)) scale(var(--grow-scale))
+
+    &__close-button
+        --button-width: 64px
+        position fixed
+        left: calc(50% - calc(var(--button-width) / 2))
+        bottom: 16px
+        width var(--button-width)
+        padding calc(var(--button-width) / 4)
+        border calc(var(--button-width) / 16) solid black
+        box-shadow 5px 5px 0 black
