@@ -17,8 +17,6 @@ function grow(img) {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
-  // Set the margin around enlarged image as percent of window width
-  const windowMargin = .15 * windowWidth;
 
   const imgOffset = img.getBoundingClientRect();
   const imgTop = imgOffset.top;
@@ -29,13 +27,15 @@ function grow(img) {
   const windowAspect = windowHeight / windowWidth;  
   const imgAspect = imgHeight / imgWidth;
   
-  let growWidth, growHeight;
+  let windowMargin, growWidth, growHeight;
 
   // Chooses whether to use window width or height as the constraining dimension
   if (imgAspect <= windowAspect) {
+    windowMargin = .10 * windowWidth;
     growWidth = windowWidth - (windowMargin * 2);
     growHeight = growWidth * imgAspect;
   } else {
+    windowMargin = .10 * windowHeight;
     growHeight = windowHeight - (windowMargin * 2);
     growWidth = growHeight / imgAspect;
   }

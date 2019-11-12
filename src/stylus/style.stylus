@@ -11,10 +11,11 @@ body
 .text-block
   display flex
   flex-direction column
+  max-width: 60ch
   font-family sans-serif
   line-height 1.5
-  margin-left var(--screen-margin);
-  margin-right var(--screen-margin);
+  margin-left auto;
+  margin-right auto;
   padding 1.5rem
 
   
