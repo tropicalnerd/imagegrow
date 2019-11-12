@@ -18,15 +18,16 @@ const closeButton =
     </svg>
   </button>`
 
-// Convert duration custom property to milliseconds
-const duration = 1000 * Number(getComputedStyle(document.documentElement).getPropertyValue('--duration').slice(0, -1));
+// Convert duration custom property to milliseconds ('0.1s' => 100)
+const durationCSS = getComputedStyle(document.documentElement).getPropertyValue('--duration');
+const durationJS = 1000 * Number(durationCSS.slice(0, -1));
 
 // Functions
 // @params img as Node
 function grow(img) {
-  img.style.transition = 'transform .2s ease';
+  img.style.transition = `transform ${durationCSS} ease`;
 
-  const figure = img.parentNode
+  const wrap = img.parentNode
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
@@ -57,13 +58,13 @@ function grow(img) {
   const growShiftX = (-imgLeft + (windowWidth - imgWidth) / 2);
   const growScale = (growWidth / imgWidth);
   
-  figure.style.setProperty('--img-top', imgTop + 'px');
-  figure.style.setProperty('--img-left', imgLeft + 'px');
-  figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
-  figure.style.setProperty('--grow-shift-y', growShiftY + 'px');
-  figure.style.setProperty('--grow-scale', growScale);
+  wrap.style.setProperty('--img-top', imgTop + 'px');
+  wrap.style.setProperty('--img-left', imgLeft + 'px');
+  wrap.style.setProperty('--grow-shift-x', growShiftX + 'px');
+  wrap.style.setProperty('--grow-shift-y', growShiftY + 'px');
+  wrap.style.setProperty('--grow-scale', growScale);
 
-  img.classList.add('grow');
+  wrap.classList.add('grow');
 }
 
 function shrink(img) {
@@ -92,7 +93,7 @@ function shrink(img) {
   setTimeout(function () {
     img.style.transition='transform 0s linear';
     img.classList.remove('grow')
-  }, duration);
+  }, durationJS);
 }
 
 function toggleGrow() {
@@ -107,9 +108,18 @@ function toggleGrow() {
 
 // Event Listeners
 imgs.forEach(function(img) {
-   img.addEventListener('click', toggleGrow);
-   const template = document.createElement('template');
-   template.innerHTML = closeButton;
-   img.parentNode.append(template.content.firstChild);
+  img.addEventListener('click', toggleGrow);
+
+  // Create close button
+  const template = document.createElement('template');
+  template.innerHTML = closeButton;
+
+  // Wrap image
+  const figure = img.parentNode;
+  const wrapper = document.createElement('div')
+  wrapper.classList.add('imgro-wrap')
+  wrapper.appendChild(img);
+  wrapper.append(template.content.firstChild);
+  figure.appendChild(wrapper);
 });
 
