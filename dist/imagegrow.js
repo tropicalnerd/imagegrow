@@ -5,6 +5,18 @@ console.log('Init imagegrow.js');
 const figures = document.querySelectorAll('.text-block__figure');
 const imgs = document.querySelectorAll('.text-block__figure > img');
 const body = document.querySelector('body');
+const closeButton =
+  `<button class="close-button">
+    <svg role="img"
+        class="svg-icon"
+        aria-labelledby="close-title"
+        focusable="false"
+        width="32"
+        height="32">
+        <title id="close-title">Close Image</title>
+        <use xlink:href="#close-button" />
+    </svg>
+  </button>`
 
 // Convert duration custom property to milliseconds
 const duration = 1000 * Number(getComputedStyle(document.documentElement).getPropertyValue('--duration').slice(0, -1));
@@ -14,6 +26,7 @@ const duration = 1000 * Number(getComputedStyle(document.documentElement).getPro
 function grow(img) {
   img.style.transition = 'transform .2s ease';
 
+  const figure = img.parentNode
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
@@ -44,11 +57,11 @@ function grow(img) {
   const growShiftX = (-imgLeft + (windowWidth - imgWidth) / 2);
   const growScale = (growWidth / imgWidth);
   
-  img.style.setProperty('--img-top', imgTop + 'px');
-  img.style.setProperty('--img-left', imgLeft + 'px');
-  img.style.setProperty('--grow-shift-x', growShiftX + 'px');
-  img.style.setProperty('--grow-shift-y', growShiftY + 'px');
-  img.style.setProperty('--grow-scale', growScale);
+  figure.style.setProperty('--img-top', imgTop + 'px');
+  figure.style.setProperty('--img-left', imgLeft + 'px');
+  figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
+  figure.style.setProperty('--grow-shift-y', growShiftY + 'px');
+  figure.style.setProperty('--grow-scale', growScale);
 
   img.classList.add('grow');
 }
@@ -72,21 +85,9 @@ function shrink(img) {
   console.log('figureTop:', figureTop);
   console.log('growShiftY:', growShiftY);
 
-  img.style.setProperty('--grow-shift-x', growShiftX + 'px');
-  img.style.setProperty('--grow-shift-y', growShiftY + 'px');
-  img.style.setProperty('--grow-scale', growScale);
-
-  // const windowWidth = window.innerWidth;
-  // const windowHeight = window.innerHeight;
-
-  // const imgTop = img.getBoundingClientRect().top;
-
-  // const shrinkLeft = shrinkOffset.left;
-  // const shrinkWidth = shrinkOffset.width;
-  // const shrinkHeight = shrinkOffset.height;
-
-  // const shrinkShiftY = -window.scrollY + shrinkOffset.top;
-  // const shrinkShiftX
+  figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
+  figure.style.setProperty('--grow-shift-y', growShiftY + 'px');
+  figure.style.setProperty('--grow-scale', growScale);
   
   setTimeout(function () {
     img.style.transition='transform 0s linear';
@@ -106,6 +107,9 @@ function toggleGrow() {
 
 // Event Listeners
 imgs.forEach(function(img) {
-   img.addEventListener('click', toggleGrow);              
+   img.addEventListener('click', toggleGrow);
+   const template = document.createElement('template');
+   template.innerHTML = closeButton;
+   img.parentNode.append(template.content.firstChild);
 });
 
