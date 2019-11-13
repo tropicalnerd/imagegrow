@@ -2,6 +2,8 @@
 console.log('Init imlarge.js');
 
 // Get elements
+
+const html = document.querySelector('html');
 const figures = document.querySelectorAll('.imlarge');
 // const imgs = figures.querySelectorAll('img');
 // const body = document.querySelector('body');
@@ -27,7 +29,7 @@ const durationJS = 1000 * Number(durationCSS.slice(0, -1));
 function grow(img) {
   // const wrap = img.parentNode;
 
-  const windowWidth = window.innerWidth;
+  const windowWidth = html.getBoundingClientRect().width;
   const windowHeight = window.innerHeight;
 
   const figure = img.parentNode;
@@ -43,7 +45,7 @@ function grow(img) {
   const closeMargin = 16;
 
   const windowAspect = windowHeight / windowWidth;  
-  const imgAspect = (imgHeight + closeMargin + closeHeight) / imgWidth;
+  const imgAspect = imgHeight / imgWidth;
   
   let windowMargin, growWidth, growHeight, buttonHeight
 
@@ -58,15 +60,15 @@ function grow(img) {
     growHeight = growWidth * imgAspect;
   } else {
     windowMargin = .10 * windowHeight;
-    growHeight = windowHeight - closeMargin - closeHeight - (windowMargin * 2);
+    growHeight = windowHeight - (windowMargin * 2);
     growWidth = growHeight / imgAspect;
   }
   
-  const growShiftY = (-imgTop + (windowHeight - imgHeight) / 2);
-  const growShiftX = (-imgLeft + (windowWidth - imgWidth) / 2);
-  const growScale = (growWidth / imgWidth);
+  const growShiftY = -imgTop + (windowHeight - imgHeight) / 2;
+  const growShiftX = -imgLeft + (windowWidth - imgWidth) / 2;
+  const growScale = growWidth / imgWidth;
   
-  img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; transform: scale(${growScale}) translate(${growShiftX}px, ${growShiftY}px)`);
+  img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
   // figure.style.setProperty('--img-top', imgTop + 'px');
   // figure.style.setProperty('--img-left', imgLeft + 'px');
   // figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
@@ -80,7 +82,6 @@ function shrink(img) {
   const figure = img.parentNode;
 
   const imgTop = Number(img.style.top.slice(0, -2));
-  console.log(imgTop);
   // const imgLeft = Number(getComputedStyle(img).getPropertyValue('--img-left').slice(0, -2));
   
   const figureOffset = figure.getBoundingClientRect();
@@ -102,7 +103,7 @@ function shrink(img) {
   // figure.style.setProperty('--grow-scale', growScale);
   
   setTimeout(function () {
-    img.setAttribute('style', 'position: static; transition: transform 0s linear');
+    img.setAttribute('style', 'position: static; transition: unset');
     figure.classList.remove('grow');
   }, durationJS);
 }
