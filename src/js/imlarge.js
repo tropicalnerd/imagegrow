@@ -8,7 +8,7 @@ const figures = document.querySelectorAll('.imlarge');
 // const imgs = figures.querySelectorAll('img');
 // const body = document.querySelector('body');
 const closeButton =
-  `<button class="button imlarge__close-button">
+  `<button class="button imlarge__close-button" >
     <svg role="img"
         class="svg-icon"
         aria-labelledby="close-title"
@@ -47,7 +47,7 @@ function grow(img) {
   const windowAspect = windowHeight / windowWidth;  
   const imgAspect = imgHeight / imgWidth;
   
-  let windowMargin, growWidth, growHeight, buttonHeight
+  let windowMargin, growWidth, growHeight
 
   // Assign width and height to figure for placeholder
   figure.style.width = imgWidth + 'px';
@@ -60,26 +60,51 @@ function grow(img) {
     growHeight = growWidth * imgAspect;
   } else {
     windowMargin = .10 * windowHeight;
-    growHeight = windowHeight - (windowMargin * 2);
+    growHeight = windowHeight - closeHeight - (windowMargin * 2);
     growWidth = growHeight / imgAspect;
   }
   
-  const growShiftY = -imgTop + (windowHeight - imgHeight) / 2;
+  const growShiftY = -imgTop - closeHeight - (closeMargin * 2) + (windowHeight - imgHeight) / 2;
   const growShiftX = -imgLeft + (windowWidth - imgWidth) / 2;
   const growScale = growWidth / imgWidth;
+
+  const closeTop = (windowHeight - growHeight - closeHeight) / 2 + growHeight;
   
   img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
-  // figure.style.setProperty('--img-top', imgTop + 'px');
-  // figure.style.setProperty('--img-left', imgLeft + 'px');
-  // figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
-  // figure.style.setProperty('--grow-shift-y', growShiftY + 'px');
-  // figure.style.setProperty('--grow-scale', growScale);
-
+  close.setAttribute('style', 'display: block');
+  setTimeout(function() {
+    close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
+  }, 20);
+  
   figure.classList.add('grow');
+
+  let box = document.getElementById('box'),
+    btn = document.querySelector('button');
+
+btn.addEventListener('click', function () {
+  
+  if (box.classList.contains('hidden')) {
+    box.classList.remove('hidden');
+    setTimeout(function () {
+      box.classList.remove('visuallyhidden');
+    }, 20);
+  } else {
+    box.classList.add('visuallyhidden');    
+    box.addEventListener('transitionend', function(e) {
+      box.classList.add('hidden');
+    }, {
+      capture: false,
+      once: true,
+      passive: false
+    });
+  }
+  
+}, false);
 }
 
 function shrink(img) {
   const figure = img.parentNode;
+  const close = figure.querySelector('.imlarge__close-button');
 
   const imgTop = Number(img.style.top.slice(0, -2));
   // const imgLeft = Number(getComputedStyle(img).getPropertyValue('--img-left').slice(0, -2));
@@ -97,6 +122,7 @@ function shrink(img) {
   // console.log('growShiftY:', growShiftY);
 
   img.style.transform = `scale(${growScale}) translate(${growShiftX}px, ${growShiftY}px)`;
+  close.style.opacity = 0
 
   // figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
   // figure.style.setProperty('--grow-shift-y', growShiftY + 'px');
@@ -104,6 +130,7 @@ function shrink(img) {
   
   setTimeout(function () {
     img.setAttribute('style', 'position: static; transition: unset');
+    close.setAttribute('style', '');
     figure.classList.remove('grow');
   }, durationJS);
 }

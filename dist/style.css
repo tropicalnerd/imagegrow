@@ -48,11 +48,13 @@ body {
 }
 .imlarge__close-button {
   --button-width: 64px;
+  display: none;
   position: fixed;
   left: calc(50% - calc(var(--button-width) / 2));
-  bottom: 16px;
   width: var(--button-width);
   padding: calc(var(--button-width) / 4);
   border: calc(var(--button-width) / 16) solid #000;
   box-shadow: 5px 5px 0 #000;
+  transition: opacity var(--duration) linear;
+  opacity: 0;
 }
