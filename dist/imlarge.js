@@ -24,7 +24,6 @@ const closeButton =
 const durationCSS = getComputedStyle(document.documentElement).getPropertyValue('--duration');
 const durationJS = 1000 * Number(durationCSS.slice(0, -1));
 
-// Functions
 // @params img as Node
 function grow(img) {
   // const wrap = img.parentNode;
@@ -42,64 +41,59 @@ function grow(img) {
   const imgHeight = imgOffset.height;
   
   const closeHeight = close.getBoundingClientRect().height;
-  const closeMargin = 16;
+  // const closeMargin = 32;
 
   const windowAspect = windowHeight / windowWidth;  
   const imgAspect = imgHeight / imgWidth;
   
-  let windowMargin, growWidth, growHeight
+  let windowMargin, closeMargin;
+  if (windowAspect <= 1) {
+    windowMargin = .1 * windowHeight;
+    closeMargin = 16 + .02 * windowHeight;
+  } else {
+    windowMargin = .1 * windowWidth;
+    closeMargin = 16 + .02 * windowWidth; 
+  }
+  // const windowMargin = windowAspect <= 1 ? .1 * windowHeight : .1 * windowWidth;
+  // console.log('window width, height, margin', windowWidth, windowHeight, windowMargin);
+
+  const maxGrowWidth = windowWidth - (windowMargin * 2);
+  const maxGrowHeight = windowHeight - windowMargin - closeHeight - (closeMargin * 2);
+  const maxGrowAspect = maxGrowHeight / maxGrowWidth;
+  // console.log('maxgrow width, height, aspect', maxGrowWidth, maxGrowHeight, maxGrowAspect);
+
+  let growWidth, growHeight
 
   // Assign width and height to figure for placeholder
   figure.style.width = imgWidth + 'px';
   figure.style.height = imgHeight + 'px';
 
+  // console.log('imgAspect, maxGrowAspect:', imgAspect, maxGrowAspect)
+
   // Chooses whether to use window width or height as the constraining dimension
-  if (imgAspect <= windowAspect) {
-    windowMargin = .10 * windowWidth;
-    growWidth = windowWidth - (windowMargin * 2);
+  if (imgAspect <= maxGrowAspect) {
+    growWidth = maxGrowWidth;
     growHeight = growWidth * imgAspect;
   } else {
-    windowMargin = .10 * windowHeight;
-    growHeight = windowHeight - closeHeight - (windowMargin * 2);
+    growHeight = maxGrowHeight;
     growWidth = growHeight / imgAspect;
   }
   
-  const growShiftY = -imgTop - closeHeight - (closeMargin * 2) + (windowHeight - imgHeight) / 2;
+  const growShiftY = -imgTop + (windowHeight - imgHeight - closeHeight - (closeMargin * 2)) / 2 ;
   const growShiftX = -imgLeft + (windowWidth - imgWidth) / 2;
-  const growScale = growWidth / imgWidth;
+  const growScale = growHeight / imgHeight;
 
-  const closeTop = (windowHeight - growHeight - closeHeight) / 2 + growHeight;
+  const closeTop = (windowHeight + growHeight) / 2 - closeHeight - closeMargin;
   
-  img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
-  close.setAttribute('style', 'display: block');
-  setTimeout(function() {
-    close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
-  }, 20);
-  
-  figure.classList.add('grow');
-
-  let box = document.getElementById('box'),
-    btn = document.querySelector('button');
-
-btn.addEventListener('click', function () {
-  
-  if (box.classList.contains('hidden')) {
-    box.classList.remove('hidden');
-    setTimeout(function () {
-      box.classList.remove('visuallyhidden');
+  if (growScale > 1) {
+    img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
+    close.setAttribute('style', 'display: block');
+    setTimeout(function() {
+      close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
     }, 20);
-  } else {
-    box.classList.add('visuallyhidden');    
-    box.addEventListener('transitionend', function(e) {
-      box.classList.add('hidden');
-    }, {
-      capture: false,
-      once: true,
-      passive: false
-    });
+    
+    figure.classList.add('grow');
   }
-  
-}, false);
 }
 
 function shrink(img) {
@@ -115,11 +109,6 @@ function shrink(img) {
   const growShiftX = 0;
   const growShiftY = figureTop - imgTop;
   const growScale = 1;
-
-  // console.log('scrollY:', window.scrollY);
-  // console.log('imgTop:', imgTop);
-  // console.log('figureTop:', figureTop);
-  // console.log('growShiftY:', growShiftY);
 
   img.style.transform = `scale(${growScale}) translate(${growShiftX}px, ${growShiftY}px)`;
   close.style.opacity = 0
