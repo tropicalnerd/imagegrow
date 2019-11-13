@@ -60,7 +60,7 @@ function grow(img) {
   const maxGrowWidth = windowWidth - (windowMargin * 2);
   const maxGrowHeight = windowHeight - windowMargin - closeHeight - (closeMargin * 2);
   const maxGrowAspect = maxGrowHeight / maxGrowWidth;
-  // console.log('maxgrow width, height, aspect', maxGrowWidth, maxGrowHeight, maxGrowAspect);
+  console.log('maxgrow width, height, aspect', maxGrowWidth, maxGrowHeight, maxGrowAspect);
 
   let growWidth, growHeight
 
@@ -68,7 +68,7 @@ function grow(img) {
   figure.style.width = imgWidth + 'px';
   figure.style.height = imgHeight + 'px';
 
-  // console.log('imgAspect, maxGrowAspect:', imgAspect, maxGrowAspect)
+  console.log('imgAspect, maxGrowAspect:', imgAspect, maxGrowAspect)
 
   // Chooses whether to use window width or height as the constraining dimension
   if (imgAspect <= maxGrowAspect) {
@@ -83,10 +83,12 @@ function grow(img) {
   const growShiftX = -imgLeft + (windowWidth - imgWidth) / 2;
   const growScale = growHeight / imgHeight;
 
+  console.log('growWidth, growHeight, growScale', growHeight, growWidth, growScale);
+
   const closeTop = (windowHeight + growHeight) / 2 - closeHeight - closeMargin;
   
-  if (growScale > 1) {
-    img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
+  if (growScale > 1.125) {
+    img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; width: ${imgWidth}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
     close.setAttribute('style', 'display: block');
     setTimeout(function() {
       close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
@@ -121,6 +123,7 @@ function shrink(img) {
     img.setAttribute('style', 'position: static; transition: unset');
     close.setAttribute('style', '');
     figure.classList.remove('grow');
+    figure.setAttribute('style', '');
   }, durationJS);
 }
 
