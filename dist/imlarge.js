@@ -1,12 +1,6 @@
-// Init
-console.log('Init imlarge.js');
-
 // Get elements
-
 const html = document.querySelector('html');
 const figures = document.querySelectorAll('.imlarge');
-// const imgs = figures.querySelectorAll('img');
-// const body = document.querySelector('body');
 const closeButton =
   `<button class="button imlarge__close-button" >
     <svg role="img"
@@ -24,15 +18,13 @@ const closeButton =
 const durationCSS = getComputedStyle(document.documentElement).getPropertyValue('--duration');
 const durationJS = 1000 * Number(durationCSS.slice(0, -1));
 
-// @params img as Node
 function grow(img) {
-  // const wrap = img.parentNode;
-
   const windowWidth = html.getBoundingClientRect().width;
   const windowHeight = window.innerHeight;
 
   const figure = img.parentNode;
   const close = figure.querySelector('.imlarge__close-button');
+  const clickPlate = figure.querySelector('.imlarge__click-plate');
 
   const imgOffset = img.getBoundingClientRect();
   const imgTop = imgOffset.top;
@@ -41,7 +33,6 @@ function grow(img) {
   const imgHeight = imgOffset.height;
   
   const closeHeight = close.getBoundingClientRect().height;
-  // const closeMargin = 32;
 
   const windowAspect = windowHeight / windowWidth;  
   const imgAspect = imgHeight / imgWidth;
@@ -54,23 +45,15 @@ function grow(img) {
     windowMargin = .1 * windowWidth;
     closeMargin = 16 + .02 * windowWidth; 
   }
-  // const windowMargin = windowAspect <= 1 ? .1 * windowHeight : .1 * windowWidth;
-  // console.log('window width, height, margin', windowWidth, windowHeight, windowMargin);
 
+  // Determine maximum size for image
   const maxGrowWidth = windowWidth - (windowMargin * 2);
   const maxGrowHeight = windowHeight - windowMargin - closeHeight - (closeMargin * 2);
   const maxGrowAspect = maxGrowHeight / maxGrowWidth;
-  console.log('maxgrow width, height, aspect', maxGrowWidth, maxGrowHeight, maxGrowAspect);
 
   let growWidth, growHeight
 
-  // Assign width and height to figure for placeholder
-  figure.style.width = imgWidth + 'px';
-  figure.style.height = imgHeight + 'px';
-
-  console.log('imgAspect, maxGrowAspect:', imgAspect, maxGrowAspect)
-
-  // Chooses whether to use window width or height as the constraining dimension
+    // Chooses whether to use window width or height as the constraining dimension
   if (imgAspect <= maxGrowAspect) {
     growWidth = maxGrowWidth;
     growHeight = growWidth * imgAspect;
@@ -83,27 +66,32 @@ function grow(img) {
   const growShiftX = -imgLeft + (windowWidth - imgWidth) / 2;
   const growScale = growHeight / imgHeight;
 
-  console.log('growWidth, growHeight, growScale', growHeight, growWidth, growScale);
-
   const closeTop = (windowHeight + growHeight) / 2 - closeHeight - closeMargin;
   
   if (growScale > 1.125) {
+    figure.setAttribute('style', `width: ${imgWidth}px; height: ${imgHeight}px`);
     img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; width: ${imgWidth}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
     close.setAttribute('style', 'display: block');
+    clickPlate.style.display = 'block';
     setTimeout(function() {
       close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
     }, 20);
     
     figure.classList.add('grow');
+    document.addEventListener('keyup', (event) => {
+      if (event.keyCode === 27) {
+        shrink(img);
+      }
+    });
   }
 }
 
 function shrink(img) {
   const figure = img.parentNode;
   const close = figure.querySelector('.imlarge__close-button');
+  const clickPlate = figure.querySelector('.imlarge__click-plate');
 
   const imgTop = Number(img.style.top.slice(0, -2));
-  // const imgLeft = Number(getComputedStyle(img).getPropertyValue('--img-left').slice(0, -2));
   
   const figureOffset = figure.getBoundingClientRect();
   const figureTop = figureOffset.top;
@@ -114,16 +102,14 @@ function shrink(img) {
 
   img.style.transform = `scale(${growScale}) translate(${growShiftX}px, ${growShiftY}px)`;
   close.style.opacity = 0
+  clickPlate.setAttribute('style', 'display: none');
 
-  // figure.style.setProperty('--grow-shift-x', growShiftX + 'px');
-  // figure.style.setProperty('--grow-shift-y', growShiftY + 'px');
-  // figure.style.setProperty('--grow-scale', growScale);
-  
   setTimeout(function () {
     img.setAttribute('style', 'position: static; transition: unset');
     close.setAttribute('style', '');
     figure.classList.remove('grow');
     figure.setAttribute('style', '');
+
   }, durationJS);
 }
 
@@ -145,17 +131,19 @@ figures.forEach(function(figure) {
   // Create close button
   const template = document.createElement('template');
   template.innerHTML = closeButton;
-
-  // Wrap image
-  // const wrapper = document.createElement('div')
-  // wrapper.classList.add('imlarge__wrap')
-  // wrapper.appendChild(img);
   figure.append(template.content.firstChild);
-  // figure.appendChild(wrapper);
+  const close = figure.querySelector('.imlarge__close-button');
+
+  // Create click plate
+  template.innerHTML = `<div class="imlarge__click-plate" style="display: none"></div>`;
+  figure.prepend(template.content.firstChild);
+  const clickPlate = figure.querySelector('.imlarge__click-plate');
 
   // Add event listeners
   img.addEventListener('load', function() {
-    img.addEventListener('click', toggleGrow);   
+    img.addEventListener('click', toggleGrow);
+    close.addEventListener('click', () => shrink(img));
+    clickPlate.addEventListener('click', () => shrink(img));
   });
 });
 
