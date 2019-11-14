@@ -25,7 +25,6 @@ function imgKeys(event) {
 }
 
 function closeKeys(img) {
-  console.log(event);
   if ([9, 13, 27, 32].includes(event.keyCode)) {
     shrink(img);
   }
@@ -66,7 +65,7 @@ function grow(img) {
 
   let growWidth, growHeight
 
-    // Chooses whether to use window width or height as the constraining dimension
+  // Chooses whether to use window width or height as the constraining dimension
   if (imgAspect <= maxGrowAspect) {
     growWidth = maxGrowWidth;
     growHeight = growWidth * imgAspect;
@@ -83,6 +82,7 @@ function grow(img) {
   
   if (growScale > 1.125) {
     figure.setAttribute('style', `width: ${imgWidth}px; height: ${imgHeight}px`);
+    figure.classList.add('grow');
     img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; width: ${imgWidth}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
     img.setAttribute('tabindex', '-1');
     close.setAttribute('style', 'display: block');
@@ -91,10 +91,6 @@ function grow(img) {
     setTimeout(function() {
       close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
     }, 20);
-    
-    figure.classList.add('grow');
-    // document.addEventListener('keyup', () => shrinkOnEsc(img));
-    // document.addEventListener('keyup', shrinkOnEsc);
   }
 }
 
@@ -115,7 +111,6 @@ function shrink(img) {
   img.style.transform = `scale(${growScale}) translate(${growShiftX}px, ${growShiftY}px)`;
   close.style.opacity = 0
   clickPlate.setAttribute('style', 'display: none');
-  // document.removeEventListener('keyup', shrinkOnEsc);
 
   setTimeout(function () {
     img.setAttribute('style', 'position: static; transition: unset');
@@ -161,7 +156,6 @@ figures.forEach(function(figure) {
     img.setAttribute('tabindex', '0');      
     close.addEventListener('click', () => shrink(img));
     close.addEventListener('keydown', () => closeKeys(img));
-    // close.addEventListener('focusout', shrink(img));
     clickPlate.addEventListener('click', () => shrink(img));
   });
 });
