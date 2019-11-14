@@ -1,6 +1,12 @@
 :root
   --duration: .2s
 
+:focus
+  outline: 5px dotted rgba(20, 250, 250, .75);
+  // -moz-outline-radius: 75%;
+  // -webkit-outline-radius: 75%;
+  outline-offset: 2px;
+
 *
   box-sizing border-box
 
@@ -16,17 +22,13 @@ img
 .svg-icon
   display block
   overflow visible
-  stroke black
+  stroke currentColor
   stroke-width 8
   stroke-linecap round
   width 100%
   height auto
 
 .button
-  // --close-button-width: 2rem
-  // position fixed
-  // bottom 7%
-  // left calc(50% - (var(--close-button-width) / 2))
   width 2rem
   padding .5rem
   margin .625rem auto 0
@@ -34,7 +36,14 @@ img
   border-radius 50%
   background-color #22FF22
   box-shadow .125rem .125rem 0 0 black
-  // transform scale(var(--grow-scale))
+
+  &:hover
+    color #222222
+    background-color #66ff66
+
+  &:active
+    color #22FF22
+    background-color black
 
 .text-block
   display flex
@@ -58,6 +67,10 @@ img
     box-shadow 8px 8px 0 black
 
 @import 'imlarge'
+
+button::-moz-focus-inner, input[type="color"]::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner
+  border 0
+
         
     
   

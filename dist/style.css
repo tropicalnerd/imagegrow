@@ -1,6 +1,10 @@
 :root {
   --duration: 0.2s;
 }
+:focus {
+  outline: 5px dotted rgba(20,250,250,0.75);
+  outline-offset: 2px;
+}
 * {
   box-sizing: border-box;
 }
@@ -16,7 +20,7 @@ img {
 .svg-icon {
   display: block;
   overflow: visible;
-  stroke: #000;
+  stroke: currentColor;
   stroke-width: 8;
   stroke-linecap: round;
   width: 100%;
@@ -30,6 +34,14 @@ img {
   border-radius: 50%;
   background-color: #2f2;
   box-shadow: 0.125rem 0.125rem 0 0 #000;
+}
+.button:hover {
+  color: #222;
+  background-color: #6f6;
+}
+.button:active {
+  color: #2f2;
+  background-color: #000;
 }
 .text-block {
   display: flex;
@@ -63,10 +75,20 @@ img {
   transition: opacity var(--duration) linear;
   opacity: 0;
 }
+.imlarge__close-button:focus {
+  -moz-outline-radius: 75%;
+}
 .imlarge__click-plate {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
+}
+button::-moz-focus-inner,
+input[type="color"]::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner {
+  border: 0;
 }

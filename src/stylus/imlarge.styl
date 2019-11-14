@@ -1,6 +1,8 @@
 .imlarge
   // img
-  //     transition transform var(--duration) ease
+  //   &:focus
+  //     outline: 5px solid rgba(20, 250, 20, .75)
+  //     outline-offset: 2px;
 
   // &.grow
   //     img
@@ -20,6 +22,9 @@
     box-shadow calc(var(--button-width) / 12) calc(var(--button-width) / 12) 0 black
     transition opacity var(--duration) linear
     opacity 0
+
+    &:focus
+      -moz-outline-radius 75%
 
   &__click-plate
     position fixed

@@ -18,6 +18,19 @@ const closeButton =
 const durationCSS = getComputedStyle(document.documentElement).getPropertyValue('--duration');
 const durationJS = 1000 * Number(durationCSS.slice(0, -1));
 
+function imgKeys(event) {
+  if (event.keyCode === 13) {
+    grow(this);
+  }
+}
+
+function closeKeys(img) {
+  console.log(event);
+  if ([9, 13, 27, 32].includes(event.keyCode)) {
+    shrink(img);
+  }
+}
+
 function grow(img) {
   const windowWidth = html.getBoundingClientRect().width;
   const windowHeight = window.innerHeight;
@@ -39,11 +52,11 @@ function grow(img) {
   
   let windowMargin, closeMargin;
   if (windowAspect <= 1) {
-    windowMargin = .1 * windowHeight;
-    closeMargin = 16 + .02 * windowHeight;
+    windowMargin = .15 * windowHeight;
+    closeMargin = 16 + .04 * windowHeight;
   } else {
-    windowMargin = .1 * windowWidth;
-    closeMargin = 16 + .02 * windowWidth; 
+    windowMargin = .15 * windowWidth;
+    closeMargin = 16 + .04 * windowWidth; 
   }
 
   // Determine maximum size for image
@@ -66,23 +79,22 @@ function grow(img) {
   const growShiftX = -imgLeft + (windowWidth - imgWidth) / 2;
   const growScale = growHeight / imgHeight;
 
-  const closeTop = (windowHeight + growHeight) / 2 - closeHeight - closeMargin;
+  const closeTop = (windowHeight + growHeight - closeHeight - closeMargin) / 2;
   
   if (growScale > 1.125) {
     figure.setAttribute('style', `width: ${imgWidth}px; height: ${imgHeight}px`);
     img.setAttribute('style', `position: fixed; transition: transform ${durationCSS} ease; top: ${imgTop}px; left: ${imgLeft}px; width: ${imgWidth}px; transform: translate(${growShiftX}px, ${growShiftY}px) scale(${growScale})`);
+    img.setAttribute('tabindex', '-1');
     close.setAttribute('style', 'display: block');
+    close.focus();
     clickPlate.style.display = 'block';
     setTimeout(function() {
       close.setAttribute('style', `display: block; top: ${closeTop}px; opacity: 1;`);
     }, 20);
     
     figure.classList.add('grow');
-    document.addEventListener('keyup', (event) => {
-      if (event.keyCode === 27) {
-        shrink(img);
-      }
-    });
+    // document.addEventListener('keyup', () => shrinkOnEsc(img));
+    // document.addEventListener('keyup', shrinkOnEsc);
   }
 }
 
@@ -103,9 +115,12 @@ function shrink(img) {
   img.style.transform = `scale(${growScale}) translate(${growShiftX}px, ${growShiftY}px)`;
   close.style.opacity = 0
   clickPlate.setAttribute('style', 'display: none');
+  // document.removeEventListener('keyup', shrinkOnEsc);
 
   setTimeout(function () {
     img.setAttribute('style', 'position: static; transition: unset');
+    img.setAttribute('tabindex', '0');
+    img.focus(); 
     close.setAttribute('style', '');
     figure.classList.remove('grow');
     figure.setAttribute('style', '');
@@ -142,7 +157,11 @@ figures.forEach(function(figure) {
   // Add event listeners
   img.addEventListener('load', function() {
     img.addEventListener('click', toggleGrow);
+    img.addEventListener('keyup', imgKeys);
+    img.setAttribute('tabindex', '0');      
     close.addEventListener('click', () => shrink(img));
+    close.addEventListener('keydown', () => closeKeys(img));
+    // close.addEventListener('focusout', shrink(img));
     clickPlate.addEventListener('click', () => shrink(img));
   });
 });
