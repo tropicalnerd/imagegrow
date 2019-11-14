@@ -18,7 +18,7 @@ const closeButton =
 const durationCSS = getComputedStyle(document.documentElement).getPropertyValue('--duration');
 const durationJS = 1000 * Number(durationCSS.slice(0, -1));
 
-function imgKeys(event) {
+function imgKeys() {
   if (event.keyCode === 13) {
     grow(this);
   }
@@ -26,6 +26,7 @@ function imgKeys(event) {
 
 function closeKeys(img) {
   if ([9, 13, 27, 32].includes(event.keyCode)) {
+    event.preventDefault();
     shrink(img);
   }
 }
@@ -116,9 +117,9 @@ function shrink(img) {
     img.setAttribute('style', 'position: static; transition: unset');
     img.setAttribute('tabindex', '0');
     img.focus(); 
-    close.setAttribute('style', '');
+    close.removeAttribute('style');
     figure.classList.remove('grow');
-    figure.setAttribute('style', '');
+    figure.removeAttribute('style');
 
   }, durationJS);
 }
